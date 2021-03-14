@@ -1,6 +1,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7789.h>
 #include <BME280I2C.h>
+#include <Fonts/FreeSans18pt7b.h>
 #include <SPI.h>
 #include <Wire.h>
 
@@ -24,6 +25,11 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 #define BAUD_RATE 9600
 
 
+int row_pixel(int row_number) {
+    return (36+18)*row_number + 36;
+}
+
+
 void setup() {
     Serial.begin(BAUD_RATE);
 
@@ -44,19 +50,19 @@ void setup() {
     tft.fillScreen(ST77XX_BLACK);
 
     // Write measurement headers
-    // Set text colour to white on black
+    tft.setFont(&FreeSans18pt7b);
     tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
-    tft.setTextSize(3);
-    tft.setCursor(17, 0);
-    tft.print("TEMPERATURE:");
-    tft.setCursor(44, 89);
-    tft.print("HUMIDITY:");
-    tft.setCursor(44, 178);
-    tft.print("PRESSURE:");
+    tft.setTextSize(1);
+    tft.setCursor(0, row_pixel(0));
+    tft.print("T:");
+    tft.setCursor(0, row_pixel(1));
+    tft.print("H:");
+    tft.setCursor(0, row_pixel(2));
+    tft.print("P:");
 
     // Set text settings for writing values (in loop)
     tft.setTextColor(ST77XX_YELLOW, ST77XX_BLACK);
-    tft.setTextSize(4);
+    tft.setTextSize(1);
     tft.setTextWrap(false);
 }
 
@@ -67,23 +73,37 @@ float temperature, humidity, pressure;
 BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
 BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
+int16_t  x1, y1;
+uint16_t w, h;
+String buffer;
+
+#define INDENT 50
 
 void loop() {
     bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
 
     print_to_serial(temperature, pressure, humidity);
 
-    tft.setCursor(48, 34);
-    tft.print(String(temperature, 1));
-    tft.println("°C");
+    tft.setCursor(INDENT, row_pixel(0));
+    buffer = String(temperature, 1) + String("°C");
+    tft.getTextBounds(buffer, INDENT, row_pixel(0), &x1, &y1, &w, &h);
+    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.println(buffer);
 
-    tft.setCursor(39, 123);
-    tft.print(String(humidity, 1));
-    tft.println("%");
+    tft.setCursor(INDENT, row_pixel(1));
+    buffer = String(humidity, 1) + String("%");
+    tft.getTextBounds(buffer, INDENT, row_pixel(1), &x1, &y1, &w, &h);
+    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.println(buffer);
 
-    tft.setCursor(30, 212);
-    tft.print(round(pressure));
-    tft.println("hPa");
+    tft.setCursor(INDENT, row_pixel(2));
+    buffer = String(round(pressure)) + String("hPa");
+    tft.getTextBounds(buffer, INDENT, row_pixel(2), &x1, &y1, &w, &h);
+    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.println(buffer);
 
     delay(5000);
 }
