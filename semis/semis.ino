@@ -84,28 +84,25 @@ void loop() {
 
     print_to_serial(temperature, pressure, humidity);
 
-    tft.setCursor(INDENT, row_pixel(0));
     buffer = String(temperature, 1) + String("°C");
-    tft.getTextBounds(buffer, INDENT, row_pixel(0), &x1, &y1, &w, &h);
-    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.println(buffer);
+    print_to_tft(buffer, INDENT, row_pixel(0));
 
-    tft.setCursor(INDENT, row_pixel(1));
     buffer = String(humidity, 1) + String("%");
-    tft.getTextBounds(buffer, INDENT, row_pixel(1), &x1, &y1, &w, &h);
-    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.println(buffer);
+    print_to_tft(buffer, INDENT, row_pixel(1));
 
-    tft.setCursor(INDENT, row_pixel(2));
     buffer = String(round(pressure)) + String("hPa");
-    tft.getTextBounds(buffer, INDENT, row_pixel(2), &x1, &y1, &w, &h);
-    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.println(buffer);
+    print_to_tft(buffer, INDENT, row_pixel(2));
 
     delay(5000);
+}
+
+
+void print_to_tft(String buffer, int x, int y) {
+    tft.setCursor(x, y);
+    tft.getTextBounds(buffer, x, y, &x1, &y1, &w, &h);
+    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
+    tft.println(buffer);
 }
 
 
