@@ -18,6 +18,11 @@ BME280I2C bme;
 #define TFT_RST -1
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
+// Backlight pin (should be PWM)
+const int TFT_BL = 3;
+// On brightness
+const int TFT_ON = 255/2;
+
 // TFT rotation [0, 1, 2, 3]
 #define TFT_ROTATION 0
 
@@ -41,6 +46,10 @@ void setup() {
         Serial.println("Could not find BME280 sensor!");
         delay(1000);
     }
+
+    // Set backlight pin
+    pinMode(TFT_BL, OUTPUT);
+    analogWrite(TFT_BL, TFT_ON);
 
     // Initialise st7899 240x240 pixels
     tft.init(240, 240, SPI_MODE0);
