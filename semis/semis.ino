@@ -11,11 +11,11 @@ BME280I2C bme;
 
 // Initialise ST7789
 // chip select pin
-#define TFT_CS 10
+const int TFT_CS = 10;
 // data/command pin
-#define TFT_DC 9
+const int TFT_DC = 9;
 // reset pin (-1 means unused)
-#define TFT_RST -1
+const int TFT_RST = -1;
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 // Backlight pin (should be PWM)
@@ -24,10 +24,10 @@ const int TFT_BL = 3;
 const int TFT_ON = 255/2;
 
 // TFT rotation [0, 1, 2, 3]
-#define TFT_ROTATION 0
+const int TFT_ROTATION = 0;
 
 // Serial BAUD RATE
-#define BAUD_RATE 9600
+const int BAUD_RATE = 9600;
 
 
 int row_pixel(int row_number) {
@@ -87,7 +87,7 @@ int16_t  x1, y1;
 uint16_t w, h;
 String buffer;
 
-#define INDENT 50
+const int INDENT = 50;
 
 void loop() {
     bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
