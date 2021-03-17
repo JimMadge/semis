@@ -23,6 +23,8 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 const int TFT_BL = 3;
 // On brightness
 const int TFT_ON = 255/2;
+// Off brightness
+const int TFT_OFF = 0;
 
 // TFT rotation [0, 1, 2, 3]
 const int TFT_ROTATION = 0;
@@ -35,6 +37,9 @@ float temperature, humidity, pressure;
 // Declare temperature and pressure units (default Celcius and Pa)
 BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
 BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
+
+// Declare display switch pin
+const int DISPLAY_PIN = 7;
 
 
 void setup() {
@@ -49,9 +54,12 @@ void setup() {
         delay(1000);
     }
 
-    // Set backlight pin
+    // Set backlight pin and brightness
     pinMode(TFT_BL, OUTPUT);
     analogWrite(TFT_BL, TFT_ON);
+
+    // Set display switch
+    pinMode(DISPLAY_PIN, INPUT_PULLUP);
 
     // Initialise st7899 240x240 pixels
     tft.init(240, 240, SPI_MODE0);
@@ -92,11 +100,20 @@ const unsigned int INDENT = 50;
 // Time since last reading and delay between readings in milliseconds
 unsigned long last_reading = 0;
 const unsigned long reading_delay = 5000;
+
+// Time since display was switched on and how long to leave on in milliseconds
+unsigned long display_started = 0;
+const unsigned long display_on_time = 15000;
+
+// Time since start
 unsigned long time;
 
 
 void loop() {
+    // Get time since start
     time = millis();
+
+    // Take a reading if `reading_delay` milliseconds have elapsed
     if (time - last_reading > reading_delay) {
         last_reading = time;
 
@@ -112,6 +129,19 @@ void loop() {
 
         buffer = String(round(pressure)) + String("hPa");
         print_to_tft(buffer, INDENT, row_pixel(2));
+    }
+
+    // Turn on the display if the display switch is pressed
+    if (digitalRead(DISPLAY_PIN) ==  LOW) {
+        display_started = time;
+        tft.enableDisplay(true);
+        digitalWrite(TFT_BL, TFT_ON);
+    }
+
+    // Turn off the display if it has been on for `display_on_time` milliseconds
+    if (time - display_started > display_on_time) {
+        digitalWrite(TFT_BL, TFT_OFF);
+        tft.enableDisplay(false);
     }
 }
 
