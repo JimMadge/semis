@@ -16,6 +16,7 @@ const int TFT_CS = 10;
 const int TFT_DC = 9;
 // reset pin (-1 means unused)
 const int TFT_RST = -1;
+// TFT object
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 // Backlight pin (should be PWM)
@@ -29,10 +30,11 @@ const int TFT_ROTATION = 0;
 // Serial BAUD RATE
 const int BAUD_RATE = 9600;
 
-
-int row_pixel(int row_number) {
-    return (36+18)*row_number + 36;
-}
+// Declare measurment variables
+float temperature, humidity, pressure;
+// Declare temperature and pressure units (default Celcius and Pa)
+BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
+BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
 
 void setup() {
@@ -73,37 +75,49 @@ void setup() {
     tft.setTextColor(ST77XX_YELLOW, ST77XX_BLACK);
     tft.setTextSize(1);
     tft.setTextWrap(false);
+
+    // Get initial reading
+    bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
 }
 
-// Declare measurment variables
-float temperature, humidity, pressure;
-
-// Declare temperature and pressure units (default Celcius and Pa)
-BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
-BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
 // Variables for writing text to st7899
 int16_t  x1, y1;
 uint16_t w, h;
 String buffer;
 
-const int INDENT = 50;
+// Indent of readings in pixels (i.e. leave space for the label)
+const unsigned int INDENT = 50;
+
+// Time since last reading and delay between readings in milliseconds
+unsigned long last_reading = 0;
+const unsigned long reading_delay = 5000;
+unsigned long time;
+
 
 void loop() {
-    bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
+    time = millis();
+    if (time - last_reading > reading_delay) {
+        last_reading = time;
 
-    print_to_serial(temperature, pressure, humidity);
+        bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
 
-    buffer = String(temperature, 1) + String("°C");
-    print_to_tft(buffer, INDENT, row_pixel(0));
+        print_to_serial(time, temperature, pressure, humidity);
 
-    buffer = String(humidity, 1) + String("%");
-    print_to_tft(buffer, INDENT, row_pixel(1));
+        buffer = String(temperature, 1) + String("°C");
+        print_to_tft(buffer, INDENT, row_pixel(0));
 
-    buffer = String(round(pressure)) + String("hPa");
-    print_to_tft(buffer, INDENT, row_pixel(2));
+        buffer = String(humidity, 1) + String("%");
+        print_to_tft(buffer, INDENT, row_pixel(1));
 
-    delay(5000);
+        buffer = String(round(pressure)) + String("hPa");
+        print_to_tft(buffer, INDENT, row_pixel(2));
+    }
+}
+
+
+int row_pixel(int row_number) {
+    return (36+18)*row_number + 36;
 }
 
 
@@ -116,7 +130,10 @@ void print_to_tft(String buffer, int x, int y) {
 }
 
 
-void print_to_serial(float temperature, float pressure, float humidity) {
+void print_to_serial(unsigned long time, float temperature, float pressure,
+                     float humidity) {
+    Serial.print("Time: ");
+    Serial.print(time);
     Serial.print("Temp: ");
     Serial.print(temperature);
     Serial.println("°C");
