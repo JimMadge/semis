@@ -14,8 +14,8 @@ BME280I2C bme;
 #define TFT_CS 10
 // data/command pin
 #define TFT_DC 9
-// reset pin
-#define TFT_RST 8
+// reset pin (-1 means unused)
+#define TFT_RST -1
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 // TFT rotation [0, 1, 2, 3]
@@ -73,6 +73,7 @@ float temperature, humidity, pressure;
 BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
 BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
+// Variables for writing text to st7899
 int16_t  x1, y1;
 uint16_t w, h;
 String buffer;
