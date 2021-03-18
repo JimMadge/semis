@@ -42,6 +42,8 @@ BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
 // Declare display switch pin
 const int DISPLAY_PIN = 7;
+// Declare min/max reset switch pin
+const int RESET_PIN = 8;
 
 
 void setup() {
@@ -62,6 +64,8 @@ void setup() {
 
     // Set display switch
     pinMode(DISPLAY_PIN, INPUT_PULLUP);
+    // Set min/max reset switch
+    pinMode(RESET_PIN, INPUT_PULLUP);
 
     // Initialise st7899 240x240 pixels
     tft.init(240, 240, SPI_MODE0);
@@ -164,6 +168,12 @@ void loop() {
     if (time - display_started > display_on_time) {
         digitalWrite(TFT_BL, TFT_OFF);
         tft.enableDisplay(false);
+    }
+
+    // Reset min/max temperature if the reset switch is pressed
+    if (digitalRead(RESET_PIN) == LOW) {
+        min_temperature = temperature;
+        max_temperature = temperature;
     }
 }
 
