@@ -81,7 +81,6 @@ void setup() {
 
     // Set text settings for writing values (in loop)
     tft.setTextColor(ST77XX_YELLOW, ST77XX_BLACK);
-    tft.setTextSize(1);
     tft.setTextWrap(false);
 
     // Get initial reading
@@ -146,16 +145,20 @@ void loop() {
 }
 
 
+// Font height in pixels (18pt → 24px)
+const int font_height_px = 25;
+// Extra spacing between rows in pixels
+const int row_spacing_px = 12;
+
+
 int row_pixel(int row_number) {
-    return (36+18)*row_number + 36;
+    return (font_height_px+row_spacing_px)*row_number + font_height_px;
 }
 
 
 void print_to_tft(String buffer, int x, int y) {
+    tft.fillRect(x, y, 240-INDENT, -font_height_px-1, ST77XX_BLACK);
     tft.setCursor(x, y);
-    tft.getTextBounds(buffer, x, y, &x1, &y1, &w, &h);
-    tft.fillRect(x1, y1, w, h, ST77XX_BLACK);
-    tft.drawRect(x1, y1, w, h, ST77XX_BLACK);
     tft.println(buffer);
 }
 
