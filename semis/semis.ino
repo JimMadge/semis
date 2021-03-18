@@ -97,13 +97,16 @@ void setup() {
     bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
     min_temperature = temperature;
     max_temperature = temperature;
+
+    // Write initial values to TFT
+    update_tft(temperature, pressure, humidity, min_temperature,
+               max_temperature);
 }
 
 
 // Variables for writing text to st7899
 int16_t  x1, y1;
 uint16_t w, h;
-String buffer;
 
 // Indent of readings in pixels (i.e. leave space for the label)
 const unsigned int INDENT = 50;
@@ -140,21 +143,8 @@ void loop() {
         }
 
         print_to_serial(time, temperature, pressure, humidity);
-
-        buffer = String(temperature, 1) + String("°C");
-        print_to_tft(buffer, INDENT, row_pixel(0));
-
-        buffer = String(humidity, 1) + String("%");
-        print_to_tft(buffer, INDENT, row_pixel(1));
-
-        buffer = String(round(pressure)) + String("hPa");
-        print_to_tft(buffer, INDENT, row_pixel(2));
-
-        buffer = String(min_temperature, 1) + String("°C");
-        print_to_tft(buffer, INDENT2, row_pixel(4));
-
-        buffer = String(max_temperature, 1) + String("°C");
-        print_to_tft(buffer, INDENT2, row_pixel(5));
+        update_tft(temperature, pressure, humidity, min_temperature,
+                   max_temperature);
     }
 
     // Turn on the display if the display switch is pressed
@@ -186,6 +176,27 @@ const int ROW_SPACING_PX = 12;
 
 int row_pixel(int row_number) {
     return (FONT_HEIGHT_PX+ROW_SPACING_PX)*row_number + FONT_HEIGHT_PX;
+}
+
+
+void update_tft(float temperature, float pressure, float humidity,
+                float min_temperature, float max_temperature) {
+    String buffer;
+
+    buffer = String(temperature, 1) + String("°C");
+    print_to_tft(buffer, INDENT, row_pixel(0));
+
+    buffer = String(humidity, 1) + String("%");
+    print_to_tft(buffer, INDENT, row_pixel(1));
+
+    buffer = String(round(pressure)) + String("hPa");
+    print_to_tft(buffer, INDENT, row_pixel(2));
+
+    buffer = String(min_temperature, 1) + String("°C");
+    print_to_tft(buffer, INDENT2, row_pixel(4));
+
+    buffer = String(max_temperature, 1) + String("°C");
+    print_to_tft(buffer, INDENT2, row_pixel(5));
 }
 
 
