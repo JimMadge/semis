@@ -104,10 +104,6 @@ void setup() {
 }
 
 
-// Variables for writing text to st7899
-int16_t  x1, y1;
-uint16_t w, h;
-
 // Indent of readings in pixels (i.e. leave space for the label)
 const unsigned int INDENT = 50;
 const unsigned int INDENT2 = 100;
