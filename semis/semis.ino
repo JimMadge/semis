@@ -34,6 +34,8 @@ const int BAUD_RATE = 9600;
 
 // Declare measurment variables
 float temperature, humidity, pressure;
+float min_temperature, max_temperature;
+
 // Declare temperature and pressure units (default Celcius and Pa)
 BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
 BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
@@ -78,6 +80,10 @@ void setup() {
     tft.print("H:");
     tft.setCursor(0, row_pixel(2));
     tft.print("P:");
+    tft.setCursor(0, row_pixel(4));
+    tft.print("MIN:");
+    tft.setCursor(0, row_pixel(5));
+    tft.print("MAX:");
 
     // Set text settings for writing values (in loop)
     tft.setTextColor(ST77XX_YELLOW, ST77XX_BLACK);
@@ -85,6 +91,8 @@ void setup() {
 
     // Get initial reading
     bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
+    min_temperature = temperature;
+    max_temperature = temperature;
 }
 
 
@@ -95,6 +103,7 @@ String buffer;
 
 // Indent of readings in pixels (i.e. leave space for the label)
 const unsigned int INDENT = 50;
+const unsigned int INDENT2 = 100;
 
 // Time since last reading and delay between readings in milliseconds
 unsigned long last_reading = 0;
@@ -118,6 +127,14 @@ void loop() {
 
         bme.read(pressure, temperature, humidity, temperature_unit, pressure_unit);
 
+        if (temperature < min_temperature) {
+            min_temperature = temperature;
+        }
+
+        if (temperature > max_temperature) {
+            max_temperature = temperature;
+        }
+
         print_to_serial(time, temperature, pressure, humidity);
 
         buffer = String(temperature, 1) + String("°C");
@@ -128,6 +145,12 @@ void loop() {
 
         buffer = String(round(pressure)) + String("hPa");
         print_to_tft(buffer, INDENT, row_pixel(2));
+
+        buffer = String(min_temperature, 1) + String("°C");
+        print_to_tft(buffer, INDENT2, row_pixel(4));
+
+        buffer = String(max_temperature, 1) + String("°C");
+        print_to_tft(buffer, INDENT2, row_pixel(5));
     }
 
     // Turn on the display if the display switch is pressed
@@ -146,18 +169,18 @@ void loop() {
 
 
 // Font height in pixels (18pt → 24px)
-const int font_height_px = 25;
+const int FONT_HEIGHT_PX = 25;
 // Extra spacing between rows in pixels
-const int row_spacing_px = 12;
+const int ROW_SPACING_PX = 12;
 
 
 int row_pixel(int row_number) {
-    return (font_height_px+row_spacing_px)*row_number + font_height_px;
+    return (FONT_HEIGHT_PX+ROW_SPACING_PX)*row_number + FONT_HEIGHT_PX;
 }
 
 
 void print_to_tft(String buffer, int x, int y) {
-    tft.fillRect(x, y, 240-INDENT, -font_height_px-1, ST77XX_BLACK);
+    tft.fillRect(x, y, 240-INDENT, -FONT_HEIGHT_PX-1, ST77XX_BLACK);
     tft.setCursor(x, y);
     tft.println(buffer);
 }
