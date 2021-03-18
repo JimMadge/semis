@@ -160,6 +160,8 @@ void loop() {
     if (digitalRead(RESET_PIN) == LOW) {
         min_temperature = temperature;
         max_temperature = temperature;
+        update_tft(temperature, pressure, humidity, min_temperature,
+                   max_temperature);
     }
 }
 
