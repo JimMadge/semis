@@ -50,10 +50,8 @@ In summary the default pins are,
   - MOSI - MOSI (11)
   - DC - 9
   - BL - 3
-- display button
-  - 7
-- min/max reset button
-  - 8
+- display button - 7
+- min/max reset button - 8
 
 ## Building and installation
 
