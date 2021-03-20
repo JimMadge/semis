@@ -1,0 +1,21 @@
+---
+
+name: CI
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1.1.1
+
+      - name: Build
+        run: |
+          arduino-cli core install arduino:avr
+          arduino-cli lib install "Adafruit ST7735 and ST7789 Library" BME280
+          arduino-cli compile -b arduino:avr:uno semis
