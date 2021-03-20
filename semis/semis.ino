@@ -22,7 +22,7 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 // Backlight pin (should be PWM)
 const int TFT_BL = 3;
 // On brightness
-const int TFT_ON = 255/2;
+const int TFT_ON = 255/3;
 // Off brightness
 const int TFT_OFF = 0;
 
@@ -147,12 +147,12 @@ void loop() {
     if (digitalRead(DISPLAY_PIN) ==  LOW) {
         display_started = time;
         tft.enableDisplay(true);
-        digitalWrite(TFT_BL, TFT_ON);
+        analogWrite(TFT_BL, TFT_ON);
     }
 
     // Turn off the display if it has been on for `display_on_time` milliseconds
     if (time - display_started > display_on_time) {
-        digitalWrite(TFT_BL, TFT_OFF);
+        analogWrite(TFT_BL, TFT_OFF);
         tft.enableDisplay(false);
     }
 
