@@ -70,8 +70,8 @@ Install the dependencies
 $ arduino-cli lib install "Adafruit ST7735 and ST7789 Library" BME280
 ```
 
-Configure [`semis/semis.ino`] with your text editor. In particular you might
-want to adjust
+Configure [`semis/semis.ino`](semis/semis.ino) with your text editor. In
+particular you might want to adjust
 
 - `TFT_ROTATATION` - Rotates the image on the TFT to suit its orientation
 - `TFT_ON` - Brightness of TFT when on, this is an `int` in the range `0-255`
