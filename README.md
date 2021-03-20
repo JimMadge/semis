@@ -6,6 +6,8 @@ A greenhouse climate monitor using Arduino, BME280 and ST7789
 - Display activated by a button to safe power
 - Minimum and maximum temperature with reset button
 
+![prototype](.github/prototype.png)
+
 ## Components
 
 - Arduino AVR based board, _e.g._ Uno/Nano/Leonardo/Micro
