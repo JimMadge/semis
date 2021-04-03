@@ -3,7 +3,7 @@
 A greenhouse climate monitor using Arduino, BME280 and ST7789
 
 - Temperature, humidity and pressure readings
-- Display activated by a button to safe power
+- Display activated by a button to save power
 - Minimum and maximum temperature with reset button
 
 Here is and example using an [Arduino
