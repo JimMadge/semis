@@ -27,7 +27,7 @@ const int TFT_ON = 255/3;
 const int TFT_OFF = 0;
 
 // TFT rotation [0, 1, 2, 3]
-const int TFT_ROTATION = 0;
+const int TFT_ROTATION = 2;
 
 // Serial BAUD RATE
 const int BAUD_RATE = 9600;
@@ -41,9 +41,9 @@ BME280::TempUnit temperature_unit(BME280::TempUnit_Celsius);
 BME280::PresUnit pressure_unit(BME280::PresUnit_hPa);
 
 // Declare display switch pin
-const int DISPLAY_PIN = 7;
+const int DISPLAY_PIN = A0;
 // Declare min/max reset switch pin
-const int RESET_PIN = 8;
+const int RESET_PIN = A1;
 
 
 void setup() {
