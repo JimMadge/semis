@@ -17,7 +17,8 @@ board](https://www.adafruit.com/product/571) (excuse my messy soldering!):
 - Arduino AVR based board, _e.g._ Uno/Nano/Leonardo/Micro
 - [Pimoroni BME280](https://shop.pimoroni.com/products/bme280-breakout)
 - [Pimoroni 1.3" SPI Colour LCD
-  (240x240)](https://shop.pimoroni.com/products/bme280-breakout) (ST7789)
+  (240x240)](https://shop.pimoroni.com/products/1-3-spi-colour-lcd-240x240-breakout)
+  (ST7789)
 - Two switch buttons
 
 Equivalent BME280 and ST7789 breakout boards (or even building your own from
