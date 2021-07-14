@@ -6,7 +6,7 @@ A greenhouse climate monitor using Arduino, BME280 and ST7789
 - Display activated by a button to save power
 - Minimum and maximum temperature with reset button
 
-Here is and example using an [Arduino
+Here is an example using an [Arduino
 Nano](https://store.arduino.cc/arduino-nano) built on an [Adafruit perma-proto
 board](https://www.adafruit.com/product/571) (excuse my messy soldering!):
 
